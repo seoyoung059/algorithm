@@ -1,13 +1,14 @@
 w = input()
-stack = []
-ppap = ["P", "P", "A", "P"]
+s=[]
+ppap=['P','P','A','P']
 for i in range(len(w)):
-    stack.append(w[i])
-    if stack[-4:] == ppap:
-        for _ in range(4):
-            stack.pop()
-        stack.append("P")
-if stack == ppap or stack == ["P"]:
-    print("PPAP")
+    s.append(w[i])
+    if s[-4:]==ppap:
+        s.pop()
+        s.pop()
+        s.pop()
+
+if s == ['P'] or s==ppap:
+    print('PPAP')
 else:
-    print("NP")
+    print('NP')
