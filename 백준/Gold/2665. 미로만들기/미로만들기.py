@@ -10,7 +10,7 @@ def bfs(maze,distance):
     q=[]
     heapq.heappush(q,(0,0,0))
     while q:
-        cy,cx,d = heapq.heappop(q)
+        d,cy,cx = heapq.heappop(q)
         if distance[cy][cx] < d:
             continue
         for i in range(4):
@@ -22,7 +22,7 @@ def bfs(maze,distance):
                     nd+=1
                 if distance[ny][nx] > nd:
                     distance[ny][nx]=nd
-                    heapq.heappush(q,(ny,nx,nd))
+                    heapq.heappush(q,(nd,ny,nx))
 
     print(distance[n-1][n-1])
 
