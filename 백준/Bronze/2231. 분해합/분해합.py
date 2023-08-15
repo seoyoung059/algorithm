@@ -1,13 +1,11 @@
-n=int(input())
+n = int(input())
 ans = 0
-
-for i in range(n-1,-1,-1):
-    get_str = str(n-i)
-    sum=0
-    for c in get_str:
+for i in range(n):
+    num = str(i)
+    sum = i
+    for c in num:
         sum+=int(c)
-    if sum + int(get_str) == n:
-        ans = get_str
+    if sum == n:
+        ans = i
         break
-
 print(ans)
