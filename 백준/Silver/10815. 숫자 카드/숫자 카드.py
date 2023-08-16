@@ -1,28 +1,25 @@
 n = int(input())
 sanggeun = list(map(int, input().split()))
-
 m = int(input())
-cards = list(map(int,input().split()))
-
+arr = list(map(int, input().split()))
 sanggeun.sort()
 
 ans=[]
-for c in cards:
-    find = False
-    s = 0
-    e = len(sanggeun)
-    while s<e:
-        m = (s+e)//2
-        if sanggeun[m] > c:
-            e = m
-        elif sanggeun[m] < c:
-            s = m + 1
-        else:
-            find = True
+for i in arr:
+    found = False
+    start = 0
+    end = len(sanggeun)
+    while start < end:
+        mid = (start+end)//2
+        if sanggeun[mid] == i:
+            found=True
             break
-    if find:
+        elif sanggeun[mid] < i:
+            start = mid+1
+        elif sanggeun[mid] > i:
+            end = mid
+    if found:
         ans.append(1)
     else:
         ans.append(0)
-
 print(' '.join(map(str,ans)))
