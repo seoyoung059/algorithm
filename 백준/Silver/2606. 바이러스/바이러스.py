@@ -1,29 +1,23 @@
-import sys
-input=sys.stdin.readline
-from collections import deque
-
-def bfs(g, v, visited):
-    cnt=0
-    visited[v]=True
-    queue = deque([v])
-    while len(queue)>0:
-        c = queue.popleft()
-        for i in g[c]:
-            if not visited[i]:
-                visited[i]=True
-                queue.append(i)
-                cnt+=1
-    print(cnt)
-
 n = int(input())
-m = int(input())
-g=[[] for i in range(n+1)]
-for _ in range(m):
-    a,b = map(int, input().split())
-    g[a].append(b)
-    g[b].append(a)
-    g[a].sort()
-    g[b].sort()
+con_num = int(input())
 
-virus=[False]*(n+1)
-bfs(g,1,virus)
+connections=[[] for i in range(n+1)]
+for i in range(con_num):
+    a,b=map(int,input().split())
+    connections[a].append(b)
+    connections[b].append(a)
+    
+    
+
+def dfs(start,visit):
+    if visit[start]:
+        return 0
+    visit[start]=True
+    cnt=1
+    for com in connections[start]:
+        cnt+=dfs(com, visit)
+    return cnt
+
+cnt=0
+visit = [False for i in range(n+1)]
+print(dfs(1,visit)-1)
