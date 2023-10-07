@@ -1,20 +1,24 @@
-import sys
-input = sys.stdin.readline
+# 카드 정렬하기
 import heapq
 
-n=int(input())
-card=[]
-for _ in range(n):
-    c= int(input())
-    heapq.heappush(card,c)
+
+def sol():
+    n = int(input())
+    hq = []
+    for i in range(n):
+        heapq.heappush(hq, int(input()))
     
-ans=0
-if len(card)==1:
-    print(ans)
-else:
-    for i in range(n-1):
-        a=heapq.heappop(card)
-        b=heapq.heappop(card)
-        ans += a+b
-        heapq.heappush(card,a+b)
-    print(ans)
+    if n<2:
+        return 0
+    
+    answer = 0
+    while len(hq)>1:
+        a = heapq.heappop(hq)
+        b = heapq.heappop(hq)
+        answer += a+b
+        heapq.heappush(hq, a+b)
+    
+    return answer
+
+print(sol())
+
