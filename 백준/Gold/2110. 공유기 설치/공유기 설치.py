@@ -1,31 +1,29 @@
-import sys
-input = sys.stdin.readline
+#공유기 설치
 
 n,c = map(int, input().split())
-h=[]
-for i in range(n):
-  h.append(int(input()))
+arr = [int(input()) for _ in range(n)]
+arr.sort()
 
-h.sort()
-
-
-e = h[-1]-h[0]
-s=1
+s = 1
+e = arr[-1]-arr[0]
 ans = 0
-while s<=e:
-  mid = (s+e)//2
-  count=1
-  current=h[0]
-  val=float("INF")
-  for i in range(1,n):
-    if current+mid<=h[i]:
-      val = min(val,h[i]-current)
-      count+=1
-      current=h[i]
-  if count < c:
-    e = mid-1
-  else:
-    s = mid+1
-    ans = max(ans,val) 
+while s <= e:
+    mid = (s+e)//2
+    
+    min_val = float('INF')
+    cnt = 1
+    prev = arr[0]
+    for i in range(1,n):
+        if arr[i]-prev >= mid:
+            min_val = min(min_val, arr[i]-prev)
+            cnt+=1
+            prev = arr[i]
+    
+    if cnt < c:
+        e = mid -1
+    else:
+        s = mid +1
+        ans = max(ans, min_val)
 
 print(ans)
+
