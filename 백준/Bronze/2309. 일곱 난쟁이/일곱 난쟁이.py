@@ -1,19 +1,18 @@
-a=[]
-for i in range(9):
-    a.append(int(input()))
+def solve():
+    heights = []
+    for i in range(9):
+        heights.append(int(input()))
+    heights.sort()
+    sum_val = sum(heights)
 
-bye=False
-for i in range(9):
-    if bye: break
-    for j in range(i):
-        if bye:break
-        if sum(a)-a[i]-a[j]==100:
-            a.remove(a[i])
-            a.remove(a[j])
-            bye=True
-       
-
-a.sort()
-
-for i in range(7):
-    print(a[i])
+    for i in range(9):
+        for j in range(i+1, 9):
+            if sum_val-heights[i]-heights[j]==100:
+                for k in range(9):
+                    if k != i and k != j:
+                        print(heights[k])
+                return
+                        
+                        
+                        
+solve()
