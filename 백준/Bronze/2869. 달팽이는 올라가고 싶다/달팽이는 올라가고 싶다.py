@@ -1,7 +1,7 @@
 a, b, v = map(int, input().split())
 
-answer=(v-a) // (a-b)+1
-if (v-a) % (a-b) !=0:
-    answer+=1
+day = 1 + (v - a) // (a-b)
+if (v-a)%(a-b) > 0:
+    day+=1
     
-print(answer)
+print(day)
