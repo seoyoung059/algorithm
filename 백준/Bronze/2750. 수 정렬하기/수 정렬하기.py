@@ -1,19 +1,16 @@
-n=int(input())
-array=[]
+n = int(input())
+arr = []
 
-for i in range(n):
-    new=int(input())
-    length=len(array)
-    if len(array)==0:
-        array.append(new)
-    else:
-        for j in range(length):
-            if array[j] > new:
-                array.insert(j,new)
-                break
-            else:
-                if j==length-1:
-                  array.insert(j+1,new)
-            
-for i in array:
-    print(i)
+arr.append(int(input()))
+for i in range(n-1):
+    tmp = int(input())
+
+    for j in range(len(arr)):
+        if tmp < arr[j]:
+            arr.insert(j,tmp)
+            break
+        if j==len(arr)-1:
+            arr.insert(j+1, tmp)
+
+for a in arr:
+    print(a)
