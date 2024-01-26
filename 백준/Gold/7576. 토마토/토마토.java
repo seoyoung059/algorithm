@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
-    static int m, n;
+    static int m, n, cnt;
 
     static int[][] box;
     static Queue<GoodTomato> q = new LinkedList<GoodTomato>();
@@ -41,20 +41,12 @@ public class Main {
                     box[ny][nx]=box[curr.y][curr.x]+1;
                     max = Math.max(max, box[ny][nx]-1);
                     q.offer(new GoodTomato(ny,nx));
+                    cnt--;
                 }
             }
         }
     }
 
-    static boolean isGoodBox(){
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if(box[i][j]==0)
-                    return false;
-            }
-        }
-        return true;
-    }
     public static void main(String[] args) throws IOException {
         st = new StringTokenizer(br.readLine());
         m = Integer.parseInt(st.nextToken());
@@ -66,14 +58,12 @@ public class Main {
             for (int j = 0; j < m; j++) {
                 box[i][j] = Integer.parseInt(st.nextToken());
                 if (box[i][j]==1) q.offer(new GoodTomato(i,j));
+                else if(box[i][j]==0) cnt++;
             }
         }
 
         solution();
-        if(isGoodBox())
-            System.out.println(max);
-        else
-            System.out.println(-1);
+        System.out.println((cnt==0)?max:-1);
 
     }
 }
