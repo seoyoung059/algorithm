@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -29,13 +28,21 @@ public class Main {
     static int dfs(int currNode) {
         if (childArray[currNode].isEmpty())
             return arr[currNode].weight;
-        PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2)->o2-o1);
-        for(Object n: childArray[currNode]){
-            pq.offer(dfs((int) n));
+//        PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2)->o2-o1);
+//        for(Object n: childArray[currNode]){
+//            pq.offer(dfs((int) n));
+//        }
+//        int max = pq.poll();
+//        int next = (pq.isEmpty())?0:pq.peek();
+        int max = 0;
+        int tmpMax = 0;
+        int tmp;
+        for (Object n: childArray[currNode]) {
+            tmp = dfs((int)n);
+            tmpMax = Math.max(tmp+max, tmpMax);
+            max = Math.max(max, tmp);
         }
-        int max = pq.poll();
-        int next = (pq.isEmpty())?0:pq.peek();
-        answer = Math.max(answer,max+next);
+        answer = Math.max(answer,tmpMax);
         return max + arr[currNode].weight;
 
     }
