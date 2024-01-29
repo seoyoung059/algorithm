@@ -1,27 +1,39 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 
 public class Main {
-
-    public static StringBuilder sb = new StringBuilder();
-    private static void hanoii(int n, int s, int m, int e){
-        if (n==1)
-            sb.append(s+" "+e+"\n");
-        else{
-            hanoii(n-1,s,e,m);
-            sb.append(s+" "+e+"\n");
-            hanoii(n-1,m,s,e);
-        }
-    }
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        int n = sc.nextInt();
-        BigInteger num = new BigInteger("2");
-        sb.append(num.pow(n).subtract(new BigInteger("1"))).append("\n");
-        if (n<=20)
-            hanoii(n,1,2,3);
-        System.out.println(sb);
-    }
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static StringBuilder sb = new StringBuilder();
+	
+	static void Hanoii_num(int n) {
+//		return (int) (Math.pow(2, n)-1);
+		BigInteger base = new BigInteger("2");
+		sb.append(base.pow(n).subtract(new BigInteger("1")));
+	}
+	static void Hanoii_move (int n, int s, int m, int e){
+		if(n==1) {
+			sb.append(s);
+			sb.append(" ");
+			sb.append(e);
+			sb.append("\n");
+		}
+		else {
+			Hanoii_move(n-1, s, e, m);
+			Hanoii_move(1, s, m, e);
+			Hanoii_move(n-1, m, s, e);
+		}
+			
+	}
+	
+	public static void main(String[] args) throws Exception {
+		int n = Integer.parseInt(br.readLine());
+//		sb.append(Hanoii_num(n));
+		Hanoii_num(n);
+		if (n<=20) {
+			sb.append("\n");
+			Hanoii_move(n, 1, 2, 3);
+		}
+		System.out.println(sb.toString());
+	}
 }
