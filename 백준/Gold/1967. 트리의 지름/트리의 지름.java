@@ -28,21 +28,13 @@ public class Main {
     static int dfs(int currNode) {
         if (childArray[currNode].isEmpty())
             return arr[currNode].weight;
-//        PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2)->o2-o1);
-//        for(Object n: childArray[currNode]){
-//            pq.offer(dfs((int) n));
-//        }
-//        int max = pq.poll();
-//        int next = (pq.isEmpty())?0:pq.peek();
         int max = 0;
-        int tmpMax = 0;
-        int tmp;
+        int tmp=0;
         for (Object n: childArray[currNode]) {
             tmp = dfs((int)n);
-            tmpMax = Math.max(tmp+max, tmpMax);
+            answer = Math.max(tmp+max, answer);
             max = Math.max(max, tmp);
         }
-        answer = Math.max(answer,tmpMax);
         return max + arr[currNode].weight;
 
     }
