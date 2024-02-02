@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Stack;
+import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -13,7 +11,6 @@ public class Main {
             this.val = val;
             this.idx = idx;
         }
-
     }
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,22 +18,17 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         StringBuilder sb = new StringBuilder();
         int[] arr = new int[n];
-        Stack<Point> stk = new Stack<>();
+        ArrayDeque<Point> stk = new ArrayDeque<>();
+//        Stack<Point> stk = new Stack<>();
         int curr; Point tmp;
         for (int i = 0; i < n; i++) {
+            arr[i] = -1;
             curr = Integer.parseInt(st.nextToken());
-            while(!stk.isEmpty()){
-                if (stk.peek().val < curr){
-                    tmp = stk.pop();
-                    arr[tmp.idx] = curr;
-                }
-                else break;
+            while(!stk.isEmpty() && stk.peek().val < curr){
+                tmp = stk.pop();
+                arr[tmp.idx] = curr;
             }
             stk.push(new Point(curr,i));
-        }
-        while(!stk.isEmpty()){
-            tmp = stk.pop();
-            arr[tmp.idx]=-1;
         }
 
         for (int i: arr){
