@@ -6,20 +6,19 @@ public class Main {
     static BufferedReader br;
     static int n;
 
-    static void shellSort(int[] arr) {
-        int h = n/2;
-        int j, tmp;
-        while(h>0) {
-            for (int i = h; i < n; i++) {
-                j = i-h;
-                tmp = arr[i];
-                while(j>=0 && arr[j]>tmp){
-                    arr[j+h] = arr[j];
-                    j-=h;
-                }
-                arr[j+h] = tmp;
+    static void cntSort(int[] arr) {
+        int[] cnt = new int[2_000_001];
+        for (int i = 0; i < n; i++) {
+            cnt[arr[i]+1_000_000]++;
+        }
+
+        int idx = 0;
+        for (int i = 0; i < n; i++) {
+            while(cnt[idx]==0){
+                idx++;
             }
-            h /= 2;
+            arr[i] = idx-1_000_000;
+            idx++;
         }
     }
     public static void main(String[] args) throws IOException {
@@ -32,7 +31,7 @@ public class Main {
         }
 
         
-        shellSort(arr);
+        cntSort(arr);
         for (int i = 0; i < n; i++) {
             sb.append(arr[i]).append("\n");
         }
