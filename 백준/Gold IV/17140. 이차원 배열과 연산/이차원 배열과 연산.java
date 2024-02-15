@@ -10,7 +10,8 @@ public class Main {
     static int[][] arr;
 
 
-    static void solve(int rNum, int cNum){
+    static void solve(){
+        int rNum=3; int cNum=3;
         int nextR = 0; int nextC = 0;
         PriorityQueue<int[]> pq = new PriorityQueue<>(((o1, o2) -> {
                 if(o1[1]==o2[1]) return o1[0]-o2[0];
@@ -22,13 +23,11 @@ public class Main {
         }
         int[] curr; int cnt=0;
         while(cnt<=100) {
-//            System.out.println(rNum+" "+cNum+" "+arr[r-1][c-1]);
             if(arr[r-1][c-1]==k) break;
             if (rNum <= cNum) { //R연산 (가로줄 확인하며 연산)
                 nextC = cNum;
                 nextR = Integer.MIN_VALUE;
                 for (int i = 0; i < cNum; i++) {
-//                int i = 0;
                     pq.clear();
                     for (int j = 0; j <101; j++) {
                         cntArr[j][1]=0;
@@ -47,12 +46,10 @@ public class Main {
                             arr[i][j + 1] = curr[1];
                             curr[1]=0;
                         } else {
-//                            if (arr[i][j] == 0) break;
                             arr[i][j] = 0;
                             arr[i][j + 1] = 0;
                         }
                     }
-//                    System.out.println(Arrays.toString(arr[i]));
                 }
             } else { // C연산 (세로줄 확인하며 연산)
                 nextR = rNum;
@@ -76,8 +73,6 @@ public class Main {
                             arr[j+1][i] = curr[1];
                             curr[1]=0;
                         } else {
-//                            if (arr[j][i] == 0) break;
-//                            if (arr[j][i] == 0) break;
                             arr[j][i] = 0;
                             arr[j+1][i] = 0;
                         }
@@ -88,12 +83,6 @@ public class Main {
             cNum = nextC; rNum = nextR;
         }
 
-//        for (int i = 0; i < cNum; i++) {
-//            for (int j = 0; j < rNum; j++) {
-//                System.out.print(arr[i][j]+" ");
-//            }
-//            System.out.println();
-//        }
         if(cnt<=100) System.out.println(cnt);
         else System.out.println(-1);
     }
@@ -112,7 +101,7 @@ public class Main {
             }
         }
 
-        solve(3,3);
+        solve();
 
     }
 }
