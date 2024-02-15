@@ -1,7 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.StringTokenizer;
 
 /*
 시작시간 08:48
@@ -41,13 +42,13 @@ public class Main {
         int[][][] arr = new int[n][n][vNum];
         int[] dy = {1, -1, 0, 0};
         int[] dx = {0, 0, 1, -1};
-        PriorityQueue<int[]> q = new PriorityQueue<>(Comparator.comparingInt(o -> o[2]));
+        ArrayDeque<int[]> q = new ArrayDeque<>();
         int[] curr; int ny, nx;
         for (int i = 0; i < vNum; i++) {
             q.clear();
             if(!virus.isEmpty()){
-            q.offer(new int[] {virus.peek()[0], virus.peek()[1], 1});
-            arr[q.peek()[0]][q.peek()[1]][i] = 1;}
+                q.offer(new int[] {virus.peek()[0], virus.peek()[1], 1});
+                arr[q.peek()[0]][q.peek()[1]][i] = 1;}
             while(!q.isEmpty()){
                 curr = q.poll();
                 for (int j = 0; j < 4; j++) {
