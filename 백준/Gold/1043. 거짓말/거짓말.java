@@ -9,7 +9,6 @@ public class Main {
     static int[] p;
     static int find(int x){
         if(p[x]==x) return x;
-        if(p[x]==0) return 0;
         return find(p[x]);
     }
     static void union(int x, int y) {
