@@ -1,12 +1,14 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
     static int n, m;
     static int[] p;
     static int find(int x){
-        if(p[x]==-1) return x;
+        if(p[x]==x) return x;
         if(p[x]==0) return 0;
         return find(p[x]);
     }
@@ -32,7 +34,7 @@ public class Main {
 
         p = new int[n+1];
         for (int i = 1; i < n+1; i++) {
-            p[i] = -1;
+            p[i] = i;
         }
 
         st = new StringTokenizer(br.readLine());
@@ -58,7 +60,7 @@ public class Main {
 
         group: for (int i = 0; i < m; i++) {
             for (int j = 0; j < group[i].length; j++) {
-                if (p[group[i][j]]==0 || find(group[i][j])==0){
+                if (find(group[i][j])==0){
                     continue group;
                 }
             }
