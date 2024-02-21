@@ -5,7 +5,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int n, m, cNum;
+    static int n, m, cNum, answer;
     static int[][] arr, cctv;
 
 
@@ -19,12 +19,12 @@ public class Main {
         }
         return newArr;
     }
-    static int sol(int idx, int[][] visited, int cnt) {
+    static void sol(int idx, int[][] visited, int cnt) {
 //        System.out.println(cnt);
         if(idx == cNum){
-            return cnt;
+            answer = Math.max(answer, cnt);
+            return;
         }
-        int answer = 0;
         int y = cctv[idx][0];
         int x = cctv[idx][1];
         int[] dy = {1, 0, -1, 0};
@@ -47,7 +47,7 @@ public class Main {
                         ny+=dy[d];
                         nx+=dx[d];
                     }
-                    answer = Math.max(answer,sol(idx+1, newVisited, cnt+tmp));
+                    sol(idx+1, newVisited, cnt+tmp);
                 }
                 break;
             case 2:
@@ -65,7 +65,7 @@ public class Main {
                         }
                         d = (d+2)%4;
                     }
-                    answer = Math.max(answer,sol(idx+1, newVisited, cnt+tmp));
+                    sol(idx+1, newVisited, cnt+tmp);
                 }
                 break;
             case 3:
@@ -83,7 +83,7 @@ public class Main {
                         }
                         d = (d+1)%4;
                     }
-                    answer = Math.max(answer,sol(idx+1, newVisited, cnt+tmp));
+                    sol(idx+1, newVisited, cnt+tmp);
                 }
                 break;
             case 4:
@@ -101,7 +101,7 @@ public class Main {
                         }
                         d = (d+1)%4;
                     }
-                    answer = Math.max(answer,sol(idx+1, newVisited, cnt+tmp));
+                    sol(idx+1, newVisited, cnt+tmp);
                 }
                 break;
             case 5:
@@ -116,10 +116,9 @@ public class Main {
                         nx+=dx[i];
                     }
                 }
-                answer = Math.max(answer,sol(idx+1, newVisited, cnt+tmp));
+                sol(idx+1, newVisited, cnt+tmp);
                 break;
         }
-        return answer;
     }
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -146,7 +145,8 @@ public class Main {
         }
 
         int[][] visited = new int[n][m];
-        System.out.println(n*m-sol(0, visited, 0)-wall);
+        sol(0, visited,0);
+        System.out.println(n*m-answer-wall);
 
     }
 }
