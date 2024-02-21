@@ -1,151 +1,155 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int n, m, answer;
-	static int[][] arr, cctv;
-	static int cctvCnt;
-	static int[] dy;
-	static int[] dx;
-	
-	static boolean isValid(int y, int x) {
-		return (0<=y)&&(y<n)&&(0<=x)&&(x<m);
-	}
-	static void count(int[] dir) {
-		boolean[][] visited = new boolean[n][m];
-		int ny, nx, d; int cnt = 0;
-		for(int i=0; i<cctvCnt; i++) {
-			if(!visited[cctv[i][1]][cctv[i][2]]) {
-				visited[cctv[i][1]][cctv[i][2]] = true;
-				cnt++;
-			}
-			d = dir[i];
-			switch(cctv[i][0]) {
-			case 1:
-				ny = cctv[i][1]+dy[d];
-				nx = cctv[i][2]+dx[d];
-				while(isValid(ny, nx)&&arr[ny][nx]==0) {
-					if(!visited[ny][nx]) cnt++;
-					visited[ny][nx]=true;
-					ny+=dy[d];
-					nx+=dx[d];
-				}
-				break;
-			case 2:
-				for(int j=0; j<2; j++) {
-					ny = cctv[i][1]+dy[d];
-					nx = cctv[i][2]+dx[d];
-					while(isValid(ny, nx)&&arr[ny][nx]!=6) {
-						if(!visited[ny][nx]) cnt++;
-						visited[ny][nx]=true;
-						ny+=dy[d];
-						nx+=dx[d];
-					}
-					d = (d+2)%4;
-				}
-				break;
-			case 3:
-				for(int j=0; j<2; j++) {
-					ny = cctv[i][1]+dy[d];
-					nx = cctv[i][2]+dx[d];
-					while(isValid(ny, nx)&&arr[ny][nx]!=6) {
-						if(!visited[ny][nx]) cnt++;
-						visited[ny][nx]=true;
-						ny+=dy[d];
-						nx+=dx[d];
-					}
-					d = (d+1)%4;
-				}
-				break;
-			case 4:
-				for(int j=0; j<3; j++) {
-					ny = cctv[i][1]+dy[d];
-					nx = cctv[i][2]+dx[d];
-					while(isValid(ny, nx)&&arr[ny][nx]!=6) {
-						if(!visited[ny][nx]) cnt++;
-						visited[ny][nx]=true;
-						ny+=dy[d];
-						nx+=dx[d];
-					}
-					d = (d+1)%4;
-				}
-				break;
-			case 5:
-				for(int j=0; j<4; j++) {
-					ny = cctv[i][1]+dy[d];
-					nx = cctv[i][2]+dx[d];
-					while(isValid(ny, nx)&&arr[ny][nx]!=6) {
-						if(!visited[ny][nx]) cnt++;
-						visited[ny][nx]=true;
-						ny+=dy[d];
-						nx+=dx[d];
-					}
-					d = (d+1)%4;
-				}
-			}
-		}
-		answer = Math.max(cnt, answer);
-	}
-	static void sol(int idx, int[] dir) {
-		if(idx==cctvCnt) {
-			count(dir);
-			return;
-		}
-		int cnt; int ans=0;
-		switch(cctv[idx][0]) {
-		case 1:
-		case 3:
-		case 4:
-			for(int i=0; i<4; i++) {
-				dir[idx]=i;
-				sol(idx+1, dir);
-			}
-			break;
-		case 2:
-			for(int i=0; i<2; i++) {
-				dir[idx]=i;
-				sol(idx+1, dir);
-			}
-			break;
-		case 5:
-			sol(idx+1, dir);
-			break;
-		}
-		
-	}
-	
-	public static void main(String[] args) throws Exception{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
 
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		arr = new int[n][m];
-		cctv = new int[8][4];
-		dy = new int[] {1 ,0, -1, 0};
-		dx = new int[] {0, 1, 0, -1};
-		int wall = 0;
-		for(int i=0; i<n; i++) {
-			st = new StringTokenizer(br.readLine());
-			for(int j=0; j<m; j++) {
-				arr[i][j] = Integer.parseInt(st.nextToken());
-				if(arr[i][j]==6) {
-					wall++;
-				}
-				else if(0<arr[i][j]) {
-					cctv[cctvCnt][0] = arr[i][j];
-					cctv[cctvCnt][1]=i;
-					cctv[cctvCnt][2]=j;
-					cctv[cctvCnt++][3] = 0;
-				}
-			}
-		}
-		
-		int[] dir = new int[cctvCnt];
-		sol(0, dir);
-		System.out.println(n*m-wall-answer);
-	}
+    static int n, m, cNum;
+    static int[][] arr, cctv;
 
+
+    static boolean isValid(int y, int x) {
+        return (0<=y)&&(y<n)&&(0<=x)&&(x<m);
+    }
+    static int[][] deepcopy(int[][] arr){
+        int[][] newArr = new int[arr.length][];
+        for (int i = 0; i < arr.length; i++) {
+            newArr[i] = arr[i].clone();
+        }
+        return newArr;
+    }
+    static int sol(int idx, int[][] visited) {
+        if(idx == cNum){
+            int ans = 0;
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    ans+=(visited[i][j]==0)?1:0;
+                }
+            }
+            return ans;
+        }
+        int answer = Integer.MAX_VALUE;
+        int y = cctv[idx][0];
+        int x = cctv[idx][1];
+        int[] dy = {1, 0, -1, 0};
+        int[] dx = {0, 1, 0, -1};
+
+        int[][] newVisited;
+        int ny, nx, d;
+        switch (arr[y][x]){
+            case 1:
+                for (int dir = 0; dir < 4; dir++) {
+                    d = dir;
+                    newVisited = deepcopy(visited);
+                    newVisited[y][x] |= (1<<d);
+                    ny = y + dy[d];
+                    nx = x + dx[d];
+                    while(isValid(ny, nx) && arr[ny][nx]!=6 && ((newVisited[ny][nx]&(1<<d))!=(1<<d))){
+                        newVisited[ny][nx]|=(1<<d);
+                        ny+=dy[d];
+                        nx+=dx[d];
+                    }
+                    answer = Math.min(answer,sol(idx+1, newVisited));
+                }
+                break;
+            case 2:
+                for (int dir = 0; dir < 2; dir++) {
+                    d = dir;
+                    newVisited = deepcopy(visited);
+                    newVisited[y][x] |= ((1<<d)|(1<<((d+2)%4)));
+                    for (int i = 0; i < 2; i++) {
+                        ny = y+dy[d];
+                        nx = x+dx[d];
+                        while(isValid(ny, nx) && arr[ny][nx]!=6 && ((newVisited[ny][nx]&(1<<d))!=(1<<d))){
+                            newVisited[ny][nx]|=(1<<d);
+                            ny+=dy[d];
+                            nx+=dx[d];
+                        }
+                        d = (d+2)%4;
+                    }
+                    answer = Math.min(answer,sol(idx+1, newVisited));
+                }
+                break;
+            case 3:
+                for (int dir = 0; dir < 4; dir++) {
+                    d = dir;
+                    newVisited = deepcopy(visited);
+                    newVisited[y][x] |= ((1<<d)|(1<<((d+1)%4)));
+                    for (int i = 0; i < 2; i++) {
+                        ny = y+dy[d];
+                        nx = x+dx[d];
+                        while(isValid(ny, nx) && arr[ny][nx]!=6 && ((newVisited[ny][nx]&(1<<d))!=(1<<d))){
+                            newVisited[ny][nx]|=(1<<d);
+                            ny+=dy[d];
+                            nx+=dx[d];
+                        }
+                        d = (d+1)%4;
+                    }
+                    answer = Math.min(answer,sol(idx+1, newVisited));
+                }
+                break;
+            case 4:
+                for (int dir = 0; dir < 4; dir++) {
+                    d = dir;
+                    newVisited = deepcopy(visited);
+                    newVisited[y][x] |= ((1<<d)|(1<<((d+1)%4))|(1<<((d+2)%4)));
+                    for (int i = 0; i < 3; i++) {
+                        ny = y+dy[d];
+                        nx = x+dx[d];
+                        while(isValid(ny, nx) && arr[ny][nx]!=6 && ((newVisited[ny][nx]&(1<<d))!=(1<<d))){
+                            newVisited[ny][nx]|=(1<<d);
+                            ny+=dy[d];
+                            nx+=dx[d];
+                        }
+                        d = (d+1)%4;
+                    }
+                    answer = Math.min(answer,sol(idx+1, newVisited));
+                }
+                break;
+            case 5:
+                newVisited = visited;
+                newVisited[y][x] = (1<<4)-1;
+                for (int i = 0; i < 4; i++) {
+                    ny = y+dy[i];
+                    nx = x+dx[i];
+                    while(isValid(ny, nx) && arr[ny][nx]!=6 && ((newVisited[ny][nx]&(1<<i))!=(1<<i))){
+                        newVisited[ny][nx]|=(1<<i);
+                        ny+=dy[i];
+                        nx+=dx[i];
+                    }
+                }
+                answer = Math.min(answer,sol(idx+1, newVisited));
+                break;
+        }
+        return answer;
+    }
+    public static void main(String[] args) throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        arr = new int[n][m];
+        cctv = new int[8][2];
+        int wall = 0;
+
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < m; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
+                if(arr[i][j]==6){
+                    wall++;
+                }
+                else if(arr[i][j]>0) {
+                    cctv[cNum][0] = i;
+                    cctv[cNum++][1] = j;
+                }
+            }
+        }
+
+        int[][] visited = new int[n][m];
+        System.out.println(sol(0, visited)-wall);
+
+    }
 }
