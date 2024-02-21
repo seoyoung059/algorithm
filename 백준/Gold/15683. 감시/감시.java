@@ -42,11 +42,11 @@ public class Main {
                 for (int dir = 0; dir < 4; dir++) {
                     d = dir;
                     newVisited = deepcopy(visited);
-                    newVisited[y][x] |= (1<<d);
+                    newVisited[y][x] = 1;
                     ny = y + dy[d];
                     nx = x + dx[d];
-                    while(isValid(ny, nx) && arr[ny][nx]!=6 && ((newVisited[ny][nx]&(1<<d))!=(1<<d))){
-                        newVisited[ny][nx]|=(1<<d);
+                    while(isValid(ny, nx) && arr[ny][nx]!=6){
+                        newVisited[ny][nx]=1;
                         ny+=dy[d];
                         nx+=dx[d];
                     }
@@ -57,12 +57,12 @@ public class Main {
                 for (int dir = 0; dir < 2; dir++) {
                     d = dir;
                     newVisited = deepcopy(visited);
-                    newVisited[y][x] |= ((1<<d)|(1<<((d+2)%4)));
+                    newVisited[y][x] =1;
                     for (int i = 0; i < 2; i++) {
                         ny = y+dy[d];
                         nx = x+dx[d];
-                        while(isValid(ny, nx) && arr[ny][nx]!=6 && ((newVisited[ny][nx]&(1<<d))!=(1<<d))){
-                            newVisited[ny][nx]|=(1<<d);
+                        while(isValid(ny, nx) && arr[ny][nx]!=6 ){
+                            newVisited[ny][nx]=1;
                             ny+=dy[d];
                             nx+=dx[d];
                         }
@@ -75,12 +75,12 @@ public class Main {
                 for (int dir = 0; dir < 4; dir++) {
                     d = dir;
                     newVisited = deepcopy(visited);
-                    newVisited[y][x] |= ((1<<d)|(1<<((d+1)%4)));
+                    newVisited[y][x] = 1;
                     for (int i = 0; i < 2; i++) {
                         ny = y+dy[d];
                         nx = x+dx[d];
-                        while(isValid(ny, nx) && arr[ny][nx]!=6 && ((newVisited[ny][nx]&(1<<d))!=(1<<d))){
-                            newVisited[ny][nx]|=(1<<d);
+                        while(isValid(ny, nx) && arr[ny][nx]!=6 ){
+                            newVisited[ny][nx]=1;
                             ny+=dy[d];
                             nx+=dx[d];
                         }
@@ -93,12 +93,12 @@ public class Main {
                 for (int dir = 0; dir < 4; dir++) {
                     d = dir;
                     newVisited = deepcopy(visited);
-                    newVisited[y][x] |= ((1<<d)|(1<<((d+1)%4))|(1<<((d+2)%4)));
+                    newVisited[y][x] =1;
                     for (int i = 0; i < 3; i++) {
                         ny = y+dy[d];
                         nx = x+dx[d];
-                        while(isValid(ny, nx) && arr[ny][nx]!=6 && ((newVisited[ny][nx]&(1<<d))!=(1<<d))){
-                            newVisited[ny][nx]|=(1<<d);
+                        while(isValid(ny, nx) && arr[ny][nx]!=6 ){
+                            newVisited[ny][nx]=1;
                             ny+=dy[d];
                             nx+=dx[d];
                         }
@@ -109,12 +109,12 @@ public class Main {
                 break;
             case 5:
                 newVisited = visited;
-                newVisited[y][x] = (1<<4)-1;
+                newVisited[y][x] = 1;
                 for (int i = 0; i < 4; i++) {
                     ny = y+dy[i];
                     nx = x+dx[i];
-                    while(isValid(ny, nx) && arr[ny][nx]!=6 && ((newVisited[ny][nx]&(1<<i))!=(1<<i))){
-                        newVisited[ny][nx]|=(1<<i);
+                    while(isValid(ny, nx) && arr[ny][nx]!=6 ){
+                        newVisited[ny][nx]=1;
                         ny+=dy[i];
                         nx+=dx[i];
                     }
