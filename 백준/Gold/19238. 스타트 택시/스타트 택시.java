@@ -23,10 +23,9 @@ public class Main {
         int[] dx = {0, 1, 0, -1};
         q.offer(new int[] {ty, tx});
         visited[ty][tx] = true;
-//        System.out.println("current: "+ty+" "+tx);
 
         int[] curr;
-        int ny, nx, qsize; int cnt=0; boolean found = false;
+        int ny, nx, qsize; boolean found = false;
         int tmpy = n, tmpx = n;
         while(!q.isEmpty()&&!found){
             qsize = q.size();
@@ -44,7 +43,6 @@ public class Main {
                             if((ny<tmpy)||((ny==tmpy)&&(nx<tmpx))){
                                 currP = -map[ny][nx];
                                 map[ty][tx] = 0;
-//                                System.out.println("손님: "+currP);
                                 tmpy = ny; tmpx = nx;
                             }
                         } else if (map[ny][nx] == 0) {
@@ -54,7 +52,6 @@ public class Main {
                     }
                 }
             }
-            cnt++;
             fuel--;
         }
         if(found) {
@@ -80,7 +77,6 @@ public class Main {
         while(!q.isEmpty()){
             qsize = q.size();
             if(fuel<=0) {
-//                fuel = -1;
                 return false;
             }
             while(qsize-->0) {
@@ -93,11 +89,9 @@ public class Main {
                         ty = ny; tx = nx;
                         return true;
                     }
-                    if (isValid(ny, nx) && !visited[ny][nx]) {
-                        if (map[ny][nx] != 1) {
-                            visited[ny][nx] = true;
-                            q.offer(new int[]{ny, nx});
-                        }
+                    if (isValid(ny, nx) && !visited[ny][nx]&&map[ny][nx] != 1) {
+                        visited[ny][nx] = true;
+                        q.offer(new int[]{ny, nx});
                     }
                 }
             }
@@ -109,16 +103,8 @@ public class Main {
     }
     static boolean sol(){
         for (int i = 0; i < m; i++) {
-//            System.out.println("====P"+(i+1)+"=====");
-//            System.out.println("taxi: "+ty+" "+tx);
-            if(!findP()) {return false;}
-//            System.out.println("p: "+currP+" fuel: "+fuel);
-            if(!toDst()) {return false;}
-//            System.out.println("taxi: "+ty+" "+tx);
-//            System.out.println("fuel: "+fuel);
-
+            if(!findP()||!toDst()) {return false;}
         }
-
         return true;
     }
     public static void main(String[] args) throws Exception{
