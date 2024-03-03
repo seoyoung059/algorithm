@@ -70,7 +70,7 @@ public class Main {
 
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < m; j++) {
-                    if (arr[i][j] < h) {
+                    if (1<=arr[i][j] && arr[i][j] < h) {
                         sum = arr[i][j];
                         cntCell = 0;
                         arr[i][j] = h;
@@ -82,14 +82,15 @@ public class Main {
                             for (int k = 0; k < 4; k++) {
                                 ny = curr[0]+dy[k];
                                 nx = curr[1]+dx[k];
-                                if(!isValid(ny,nx)) {
+                                if(!isValid(ny,nx) || arr[ny][nx]==-1) {
 //                                    System.out.println("out "+ny+" "+nx);
                                     outer = true;
+                                    arr[curr[0]][curr[1]] = -1;
                                 }
                                 else if(arr[ny][nx]<h){
                                     sum+=arr[ny][nx];
                                     q.offer(new int[] {ny, nx});
-                                    arr[ny][nx] = h;
+                                    arr[ny][nx] = arr[curr[0]][curr[1]];
                                 }
                             }
                         }
