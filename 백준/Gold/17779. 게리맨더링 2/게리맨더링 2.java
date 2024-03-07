@@ -23,79 +23,60 @@ public class Main {
         }
 
         int[] p = new int[6];
-        int min =Integer.MAX_VALUE, max=Integer.MIN_VALUE, ans=Integer.MAX_VALUE;
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE, ans = Integer.MAX_VALUE;
         for (int x = 1; x < n + 1; x++) {
             for (int y = 1; y < n + 1; y++) {
                 for (int d1 = 1; d1 < n; d1++) {
                     for (int d2 = 1; d2 < n; d2++) {
-//        int x=3,y=5,d1=2, d2=1;
                         if (x + d1 + d2 > n || y - d1 < 1 || y + d2 > n) continue;
-//                        System.out.println(x+" "+y+" "+d1+" "+d2);
                         for (int i = 0; i < 6; i++) {
                             p[i] = 0;
                         }
-                        min =Integer.MAX_VALUE; max=Integer.MIN_VALUE;
-                        // 시작점 전
+                        min = Integer.MAX_VALUE;
+                        max = Integer.MIN_VALUE;
+
+
+                        // 영역 5보다 위쪽 영역
                         for (int i = 1; i < x; i++) {
                             p[1] += arr[i][y];
                             p[2] += arr[i][n] - arr[i][y];
                         }
-//        System.out.println(Arrays.toString(p));
-
-
-                        // 영역 5
-                        p[5] += arr[x][y] - arr[x][y - 1];
+                        
                         p[2] += arr[x][n] - arr[x][y];
                         p[3] += arr[x + d1][y - d1 - 1];
-//        System.out.println(Arrays.toString(p));
+                        p[5] += arr[x][y] - arr[x][y - 1];
+
+                        // d1으로 갱신되는 영역
                         for (int i = 1; i <= d1; i++) {
-                            p[5] += arr[x + d2 + i][y + d2 - i] - arr[x + i][y - i - 1];
                             p[1] += arr[x + i - 1][y - i];
                             p[4] += arr[x + d2 + i][n] - arr[x + d2 + i][y + d2 - i];
-//                            System.out.println(arr[x+i-1][y-i]);
-//                            p[2] += arr[x+d2+i][n]-arr[x+d2+i][y+d2-i];
+                            p[5] += arr[x + d2 + i][y + d2 - i] - arr[x + i][y - i - 1];
                         }
 
+                        
+                        // d2로 결정되는 영역
                         for (int i = 1; i <= d2; i++) {
-                            p[5] += arr[x + i][y + i] - arr[x + d1 + i][y - d1 + i - 1];
                             p[2] += arr[x + i][n] - arr[x + i][y + i];
                             p[3] += arr[x + d1 + i][y - d1 + i - 1];
+                            p[5] += arr[x + i][y + i] - arr[x + d1 + i][y - d1 + i - 1];
                         }
-//        System.out.println(Arrays.toString(p));
 
-
+                        // 영역 5보다 남쪽에 있는 영역
                         for (int i = x + d1 + d2 + 1; i <= n; i++) {
-                            p[3] += arr[i][y -d1 + d2 - 1];
-                            p[4] += arr[i][n] - arr[i][y -d1 + d2 - 1];
+                            p[3] += arr[i][y - d1 + d2 - 1];
+                            p[4] += arr[i][n] - arr[i][y - d1 + d2 - 1];
                         }
 
+                        // 최대인구/최소인구 구하기 및 답 갱신
                         for (int i = 1; i < 6; i++) {
                             min = Math.min(p[i], min);
                             max = Math.max(p[i], max);
                         }
-                        if(max-min < ans){
-//                            System.out.println(Arrays.toString(p));
-                            ans = max-min;
-                        }
+                        ans = (max - min < ans) ? max - min : ans;
                     }
                 }
             }
         }
-//        System.out.println(Arrays.toString(p));
         System.out.println(ans);
     }
 }
-
-/*
-
-7
-1 1 1 1 1 1 1
-1 1 1 1 1 1 1
-1 1 1 1 1 1 1
-1 1 1 1 1 1 1
-1 1 1 1 1 1 1
-1 1 1 1 1 1 1
-1 1 1 1 1 1 1
-
-14 5 6 6 18
- */
