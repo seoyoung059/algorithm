@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-
-
     /*
     1. 몬스터 복제 시도
     - 현재 위치에서 자신과 같은 방향의 몬스터 복제
@@ -36,19 +34,19 @@ public class Main {
     시체는 따로 저장해놨다가 삭제 (최대 3칸의 정보)
     복제 반영
      */
-    static ArrayDeque<Monster>[][] mArr;
-    static int[][] dArr, mCnt;
+    static int[][][] mArr;
+    static int[][] dArr;
+    static int[][][] mCnt;
+    static int[][] visited = new int[6][6];
     static int cy, cx;
     static ArrayDeque<Monster> monsters;
-    static ArrayDeque<Monster> eggs;
-    static ArrayDeque<Monster>[] dead;
+    static ArrayDeque<int[]> eggs;
 
     // 몬스터 이동방향, 북쪽부터 반시계
 //    static int[] mdy = {-1, -1, 0, 1, 1, 1, 0, -1};
 //    static int[] mdx = {0, -1, -1, -1, 0, 1, 1, 1};
     static int[] mdy = {0, -1, -1, -1, 0, 1, 1, 1};
     static int[] mdx = {-1, -1, 0, 1, 1, 1, 0, -1};
-
 
     // 팩맨 이동방향, 상좌하우
     static int[] cdy = {-1, 0, 1, 0};
@@ -68,50 +66,45 @@ public class Main {
     }
 
     static void layEgg() {
-//        mPrint();
-        int mSize; Monster curr;
+        int mSize;
+        Monster curr;
         for (int i = 1; i < 5; i++) {
             for (int j = 1; j < 5; j++) {
-                mSize = mArr[i][j].size();
-                mCnt[i][j] = mSize;
-                while(mSize-->0) {
-                    curr = mArr[i][j].pollFirst();
-                    eggs.offerLast(new Monster(curr.y, curr.x, curr.d));
-                    mArr[i][j].offerLast(curr);
+                for (int k = 0; k < 8; k++) {
+                    mCnt[i][j][k]=mArr[i][j][k];
+                    if(mArr[i][j][k]!=0) eggs.offerLast(new int[] {i,j,k,mArr[i][j][k]});
                 }
             }
         }
-//        System.out.println("eggs "+eggs.size());
     }
 
     static void mMove() {
-//        System.out.println("mmove");
-        int mSize, ny, nx, nd; Monster curr;
+        int mSize, ny, nx, nd;
+        Monster curr;
         for (int i = 1; i < 5; i++) {
             for (int j = 1; j < 5; j++) {
-                mSize = mCnt[i][j];
-                while(mSize-->0) {
-                    curr = mArr[i][j].pollFirst();
-                    for (int d = 0; d < 8; d++) {
-                        nd = (curr.d-d+8)%8;
-                        ny = curr.y+mdy[nd];
-                        nx = curr.x+mdx[nd];
-                        if(dArr[ny][nx] != 0 || (cy==ny&&cx==nx)) continue;
-                        curr.y = ny; curr.x = nx; curr.d = nd;
+                for (int k = 0; k < 8; k++) {
+                    mArr[i][j][k]-=mCnt[i][j][k];
+                    mArr[i][j][8]-=mCnt[i][j][k];
+                    ny = i; nx = j; nd = k;
+                    for(int d=-8; d<0; d++){
+                        if (dArr[i+mdy[(k-d)%8]][j+mdx[(k-d)%8]] != 0 || (cy == i+mdy[(k-d)%8] && cx == j+mdx[(k-d)%8])) continue;
+                        nd = (k-d)%8;
+                        ny = i+mdy[nd]; nx = j+mdx[nd];
                         break;
                     }
-                    mArr[curr.y][curr.x].offerLast(curr);
+                    mArr[ny][nx][nd] += mCnt[i][j][k];
+                    mArr[ny][nx][8] += mCnt[i][j][k];
+                    mCnt[i][j][k] = 0;
                 }
             }
         }
-//        System.out.println("monster Moved");
-//        mPrint();
     }
+
     static void mPrint() {
-//        System.out.println("mPrint");
         for (int i = 1; i < 5; i++) {
             for (int j = 1; j < 5; j++) {
-                System.out.print(mArr[i][j].size()+" ");
+                System.out.print(mArr[i][j][8] + " ");
             }
             System.out.println();
         }
@@ -119,73 +112,79 @@ public class Main {
     }
 
 
-    static void pMove() {
+    static void pMove(int t) {
 
         int[] movement = new int[3];
         int[] best = new int[3];
-        int[][] visited = new int[6][6];
         eatMax = -1;
 
         //상좌하우
         int ny, nx;
         for (int i = 0; i < 4; i++) {
-            ny = cy+cdy[i]; nx = cx+cdx[i];
-            if(ny<1||nx<1||4<ny||4<nx) continue;
+            ny = cy + cdy[i];
+            nx = cx + cdx[i];
+            if (ny < 1 || nx < 1 || 4 < ny || 4 < nx) continue;
             movement[0] = i;
-            visited[cy+cdy[i]][cx+cdx[i]] ++;
-            _moveStep(+1, cy+cdy[i], cx+cdx[i], movement, 0, best, visited);
-            visited[cy+cdy[i]][cx+cdx[i]] --;
+            visited[cy + cdy[i]][cx + cdx[i]]++;
+            _moveStep(+1, cy + cdy[i], cx + cdx[i], movement, 0, best, visited);
+            visited[cy + cdy[i]][cx + cdx[i]]--;
         }
-
-//        System.out.println(Arrays.toString(best)+ +eatMax);
 
         for (int i = 0; i < 3; i++) {
             cy += cdy[best[i]];
             cx += cdx[best[i]];
-            if(!mArr[cy][cx].isEmpty()){
-                dArr[cy][cx] = 3;
-                mArr[cy][cx].clear();
+            if(mArr[cy][cx][8]!=0) {
+                for (int j = 0; j < 8; j++) {
+                    if (mArr[cy][cx][j] != 0) {
+                        dArr[cy][cx] = t + 2;
+                        mArr[cy][cx][j] = 0;
+                    }
+                }
+                mArr[cy][cx][8] = 0;
             }
         }
-//        System.out.println(cy+ " "+cx);
     }
 
     static void _moveStep(int cnt, int y, int x, int[] movement, int eat, int[] best, int[][] visited) {
-        if (cnt==3){
-            if(eatMax < eat+(visited[y][x]>1?0:mArr[y][x].size())) {
-                eatMax = eat+(visited[y][x]>1?0:mArr[y][x].size());
-                best[0] = movement[0]; best[1] = movement[1]; best[2] = movement[2];
-//                System.out.println(Arrays.toString(best)+" "+eatMax);
+        if (cnt == 3) {
+            if (eatMax < eat + (visited[y][x] > 1 ? 0 : mArr[y][x][8])) {
+                eatMax = eat + (visited[y][x] > 1 ? 0 : mArr[y][x][8]);
+                best[0] = movement[0];
+                best[1] = movement[1];
+                best[2] = movement[2];
             }
             return;
         }
         int ny, nx;
         for (int i = 0; i < 4; i++) {
-            ny = y+cdy[i]; nx = x+cdx[i];
-            if(ny<1||nx<1||4<ny||4<nx) continue;
+            ny = y + cdy[i];
+            nx = x + cdx[i];
+            if (ny < 1 || nx < 1 || 4 < ny || 4 < nx) continue;
             movement[cnt] = i;
-            visited[y+cdy[i]][x+cdx[i]] ++;
-            _moveStep(cnt+1, y+cdy[i], x+cdx[i], movement, eat+(visited[y][x]>1?0:mArr[y][x].size()), best, visited);
-            visited[y+cdy[i]][x+cdx[i]] --;
+            visited[y + cdy[i]][x + cdx[i]]++;
+            _moveStep(cnt + 1, y + cdy[i], x + cdx[i], movement, eat + (visited[y][x] > 1 ? 0 : mArr[y][x][8]), best, visited);
+            visited[y + cdy[i]][x + cdx[i]]--;
         }
     }
 
-    static void dead() {
+    static void dead(int t) {
         for (int i = 1; i < 5; i++) {
             for (int j = 1; j < 5; j++) {
-                if(dArr[i][j]>0) dArr[i][j]--;
+                if (dArr[i][j] == t) dArr[i][j] = 0;
             }
         }
     }
 
     static void babyMonster() {
-        Monster curr;
-        while(!eggs.isEmpty()) {
+        int[] curr;
+        while (!eggs.isEmpty()) {
             curr = eggs.pollFirst();
-            mArr[curr.y][curr.x].offerLast(curr);
+            mArr[curr[0]][curr[1]][curr[2]]+=curr[3];
+            mArr[curr[0]][curr[1]][8]+=curr[3];
         }
     }
-    public static void main(String[] args) throws  Exception{
+
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -193,22 +192,22 @@ public class Main {
         int T = Integer.parseInt(st.nextToken());
 
         //전체 맵
-        mArr = new ArrayDeque[6][6];
-        mCnt = new int[6][6];
+        mArr = new int[6][6][9];
+        mCnt = new int[6][6][9];
         dArr = new int[6][6];
         for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
-                mArr[i][j] = new ArrayDeque<>();
-            }
             dArr[0][i] = -1;
             dArr[5][i] = -1;
             dArr[i][0] = -1;
             dArr[i][5] = -1;
         }
+//
+//        //팩맨 위치
+//        st = new StringTokenizer(br.readLine());
+//        cy = Integer.parseInt(st.nextToken());
+//        cx = Integer.parseInt(st.nextToken());
 
-        
         // 몬스터 입력 받기
-        monsters = new ArrayDeque<>();
         eggs = new ArrayDeque<>();
 
         int my, mx, md;
@@ -216,8 +215,9 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             my = Integer.parseInt(st.nextToken());
             mx = Integer.parseInt(st.nextToken());
-            md = Integer.parseInt(st.nextToken())-1;
-            mArr[my][mx].offerLast(new Monster(my, mx, md));
+            md = Integer.parseInt(st.nextToken()) - 1;
+            mArr[my][mx][md]++;
+            mArr[my][mx][8]++;
         }
 
         //팩맨 위치
@@ -226,18 +226,20 @@ public class Main {
         cx = Integer.parseInt(st.nextToken());
 
         for (int t = 0; t < T; t++) {
-//            System.out.println(cy+" "+cx);
+//            mPrint();
             layEgg();
             mMove();
-            pMove();
-            dead();
+//            mPrint();
+            pMove(t);
+//            mPrint();
+            dead(t);
             babyMonster();
         }
-//        mPrint();
-        int answer=0;
+
+        int answer = 0;
         for (int i = 1; i < 5; i++) {
             for (int j = 1; j < 5; j++) {
-                answer+=mArr[i][j].size();
+                answer += mArr[i][j][8];
             }
         }
         System.out.println(answer);
