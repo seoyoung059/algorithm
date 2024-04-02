@@ -1,94 +1,73 @@
-import sun.util.resources.cldr.ka.CalendarData_ka_GE;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static class SegmentTree {
+
+
+    static class FenwickTree {
         long[] tree;
-        int height;
-        int nodeNum;
-        int arrSize;
+        long n;
 
-        public SegmentTree(int n){
-            this.height = (int) Math.ceil(Math.log(n)/Math.log(2))+1;
-            this.nodeNum = (int)Math.round(Math.pow(2, this.height));
-            this.tree = new long[this.nodeNum];
-            this.arrSize = n;
-;        }
-
-        private void _constructTree(long[] arr, int low, int high, int pos){
-            if(low == high) {
-                this.tree[pos] = arr[low];
-                return;
-            }
-            int mid = (low+high)/2;
-            _constructTree(arr, low, mid, pos*2+1);
-            _constructTree(arr, mid+1, high, pos*2+2);
-            this.tree[pos] = this.tree[pos*2+1]+this.tree[pos*2+2];
+        FenwickTree(int n) {
+            this.tree = new long[n+1];
+            this.n = n;
         }
 
-        public void constructTree(long[] arr){
-            _constructTree(arr, 0, this.arrSize-1, 0);
+        public void update(int i, long diff) {
+            while(i<=this.n) {
+                this.tree[i]+=diff;
+                i += (i&-i);
+            }
         }
 
-        private long _getRangeQuery(int qlow, int qhigh, int low, int high, int pos){
-            if(qlow<=low&&high<=qhigh){
-                return this.tree[pos];
+        public long sum(int i) {
+            long answer = 0;
+            while(i>0){
+                answer+=this.tree[i];
+                i -= (i&-i);
             }
-            else if(qhigh<low || high < qlow){
-                return 0;
-            }
-            else {
-                int mid = (low+high)/2;
-                return _getRangeQuery(qlow, qhigh, low, mid, 2*pos+1) + _getRangeQuery(qlow, qhigh, mid+1, high, 2*pos+2);
-            }
-        }
-        public long getRangeQuery(int qlow, int qhigh){
-            return _getRangeQuery(qlow, qhigh, 0, this.arrSize-1, 0);
+            return answer;
         }
 
-        private void _update(int idx, long newValue, int low, int high, int pos){
-            if(low==high){
-                this.tree[pos] = newValue;
-                return;
-            }
-            int mid = (low+high)/2;
-            if(idx <= mid) _update(idx, newValue, low, mid, pos*2+1);
-            else _update(idx, newValue, mid+1, high, pos*2+2);
-            this.tree[pos] = this.tree[pos*2+1]+this.tree[pos*2+2];
-        }
-        public void update(int idx, long newValue) {
-            _update(idx, newValue, 0, this.arrSize-1, 0);
+        public long prefixSum(int i, int j){
+            return sum(j)-sum(i-1);
         }
     }
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        StringBuilder sb = new StringBuilder();
 
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
         int k = Integer.parseInt(st.nextToken());
 
-        long[] arr = new long[n];
-
-        for (int i = 0; i < n; i++) {
+        FenwickTree ft = new FenwickTree(n);
+        long[] arr = new long[n+1];
+        for(int i=1; i<=n; i++){
             arr[i] = Long.parseLong(br.readLine());
+            ft.update(i, arr[i]);
         }
 
-        SegmentTree segTree = new SegmentTree(n);
-        segTree.constructTree(arr);
 
+        StringBuilder sb = new StringBuilder();
+        long tmp;
         for (int i = 0; i < m+k; i++) {
             st = new StringTokenizer(br.readLine());
-            switch(Integer.parseInt(st.nextToken())){
+            int a = Integer.parseInt(st.nextToken());
+            switch (a){
                 case 1:
-                    segTree.update(Integer.parseInt(st.nextToken())-1, Long.parseLong(st.nextToken()));
+                    int b1 = Integer.parseInt(st.nextToken());
+                    long c1 = Long.parseLong(st.nextToken());
+                    tmp = c1-arr[b1];
+                    arr[b1] = c1;
+                    ft.update(b1, tmp);
                     break;
                 case 2:
-                    sb.append(segTree.getRangeQuery(Integer.parseInt(st.nextToken())-1, Integer.parseInt(st.nextToken())-1)).append("\n");
+                    int b2 = Integer.parseInt(st.nextToken());
+                    int c2 = Integer.parseInt(st.nextToken());
+
+                    sb.append(ft.prefixSum(b2, c2)).append("\n");
                     break;
             }
         }
