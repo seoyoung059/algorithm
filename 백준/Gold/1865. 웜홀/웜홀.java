@@ -28,6 +28,7 @@ public class Main {
             m = Integer.parseInt(st.nextToken());
             w = Integer.parseInt(st.nextToken());
             distance = new int[n + 1];
+            neg = false;
 
             for (int i = 0; i < m; i++) {
                 st = new StringTokenizer(br.readLine());
@@ -46,8 +47,13 @@ public class Main {
                 t = -Integer.parseInt(st.nextToken());
 
                 if (edges[s][e] > t) edges[s][e] = t;
+                if(s==e){
+                    neg = true;
+                    break;
+                }
             }
 
+            if(!neg){
             for (int i = 1; i < n + 1; i++) {
                 for (int j = 1; j < n + 1; j++) {
                     if (edges[i][j] != Integer.MAX_VALUE) {
@@ -66,7 +72,7 @@ public class Main {
                     s = curr[0];
                     e = curr[1];
                     t = curr[2];
-                    if (distance[s] != Integer.MAX_VALUE && distance[s] + t < distance[e]) {
+                    if (distance[s] + t < distance[e]) {
                         distance[e] = distance[s] + t;
                         if (i == n) {
                             neg = true;
@@ -74,6 +80,7 @@ public class Main {
                         }
                     }
                 }
+            }
             }
 //            System.out.println(Arrays.toString(distance));
             sb.append(neg ? "YES" : "NO").append("\n");
