@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -20,10 +19,7 @@ public class Main {
         int m = Integer.parseInt(st.nextToken());
 
         arr = new char[n][m];
-
-        int[] hole = new int[2];
-        int[] red = new int[2];
-        int[] blue = new int[2];
+        int[] curr = new int[5];
 
         String str;
         for (int i = 0; i < n; i++) {
@@ -32,42 +28,36 @@ public class Main {
                 arr[i][j] = str.charAt(j);
                 switch (arr[i][j]) {
                     case 'R':
-                        red[0] = i;
-                        red[1] = j;
+                        curr[0] = i;
+                        curr[1] = j;
                         arr[i][j] = '.';
                         break;
                     case 'B':
-                        blue[0] = i;
-                        blue[1] = j;
+                        curr[2] = i;
+                        curr[3] = j;
                         arr[i][j] = '.';
-                        break;
-                    case 'O':
-                        hole[0] = i;
-                        hole[1] = j;
                         break;
                 }
             }
         }
 
         q = new ArrayDeque<>();
-        q.offer(new int[]{red[0], red[1], blue[0], blue[1], 0});
+        q.offer(curr);
         visited = new boolean[n][m][n][m];
-        visited[red[0]][red[1]][blue[0]][blue[1]] = true;
+        visited[curr[0]][curr[1]][curr[2]][curr[3]] = true;
         int qSize, ry, rx, by, bx, i, trace = 0;
-        int[] curr;
         boolean found = false;
         loop:
         for (i = 0; i < 10; i++) {
             qSize = q.size();
             while (qSize-- > 0) {
                 curr = q.pollFirst();
-//                System.out.println(Arrays.toString(curr));
+                ry = curr[0];
+                rx = curr[1];
+                by = curr[2];
+                bx = curr[3];
                 if (curr[0] > curr[2]) {
                     // 위로 확인할땐 blue 먼저
-                    ry = curr[0];
-                    rx = curr[1];
-                    by = curr[2];
-                    bx = curr[3];
                     while (arr[by - 1][bx] == '.') by--;
                     while (arr[ry - 1][rx] == '.' && !(by == ry - 1 && bx == rx)) ry--;
 
@@ -101,10 +91,6 @@ public class Main {
 
                 } else {
                     // 위로 확인할땐 red 먼저
-                    ry = curr[0];
-                    rx = curr[1];
-                    by = curr[2];
-                    bx = curr[3];
                     while (arr[ry - 1][rx] == '.') ry--;
                     while (arr[by - 1][bx] == '.' && !(ry == by - 1 && bx == rx)) by--;
                     if(arr[ry-1][rx]=='O' && !(ry==by-1 && rx==bx)){
@@ -141,9 +127,7 @@ public class Main {
                 if (curr[1] > curr[3]) {
                     // 왼쪽으로 확인할 땐 blue 먼저
                     ry = curr[0];
-                    rx = curr[1];
                     by = curr[2];
-                    bx = curr[3];
                     while (arr[by][bx - 1] == '.') bx--;
                     while (arr[ry][rx - 1] == '.' && !(bx == rx - 1 && by == ry)) rx--;
                     if (arr[by][bx-1] != 'O') {
@@ -164,7 +148,6 @@ public class Main {
                     bx = curr[3];
                     while (arr[ry][rx + 1] == '.') rx++;
                     while (arr[by][bx + 1] == '.' && !(rx == bx + 1 && ry == by)) bx++;
-//                    System.out.println(ry+" "+rx+" "+by+" "+bx);
                     if(arr[ry][rx+1]=='O' && !(rx==bx+1 && ry==by)){
                         found = true;
                         trace = (curr[4]<<2|3);
@@ -178,9 +161,7 @@ public class Main {
 
                 } else {
                     ry = curr[0];
-                    rx = curr[1];
                     by = curr[2];
-                    bx = curr[3];
                     while (arr[ry][rx - 1] == '.') rx--;
                     while (arr[by][bx - 1] == '.' && !(rx == bx - 1 && by == ry)) bx--;
                     if(arr[ry][rx-1]=='O' && !(rx==bx-1 && ry==by)){
@@ -196,7 +177,6 @@ public class Main {
 
                     rx = curr[1];
                     bx = curr[3];
-//                    System.out.println(ry+" "+rx+" "+by+" "+bx);
                     while (arr[by][bx + 1] == '.') bx++;
                     while (arr[ry][rx + 1] == '.' && !(bx == rx + 1 && ry == by)) rx++;
                     if (arr[by][bx+1] != 'O') {
@@ -215,7 +195,6 @@ public class Main {
                 }
             }
         }
-//        System.out.println("found: " + found + " "+i);
         StringBuilder sb = new StringBuilder();
         if(!found){
             sb.append(-1);
@@ -241,5 +220,6 @@ public class Main {
         }
         System.out.println(sb);
     }
+
 
 }
