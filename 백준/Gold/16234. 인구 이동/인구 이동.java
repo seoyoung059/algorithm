@@ -30,20 +30,17 @@ public class Main {
         boolean going = true;
         ArrayDeque<int[]> q = new ArrayDeque<>();
         ArrayDeque<int[]> opened = new ArrayDeque<>();
-        int[][] visited = new int[n][n];
-        int[] curr; int ny, nx, tmp, cnt, sum;
+        boolean[][] visited = new boolean[n][n];
+        int[] curr; int ny, nx, tmp, cnt, sum; boolean now = false;
         while (going) {
             going = false;
             cnt = 0; answer++;
             for (int i = 0; i < n; i++) {
-                Arrays.fill(visited[i],0);
-            }
-            for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    if(visited[i][j]==0){
+                    if(visited[i][j]==now){
                         q.offerLast(new int[] {i,j});
                         opened.offer(q.peekLast());
-                        visited[i][j] = ++cnt;
+                        visited[i][j] = !now;
                         sum=arr[i][j];
                         while(!q.isEmpty()) {
                             curr = q.pollFirst();
@@ -53,10 +50,10 @@ public class Main {
 
                                 if(ny<0 || nx<0 || ny>=n||nx>=n) continue;
                                 tmp = Math.abs(arr[ny][nx]-arr[curr[0]][curr[1]]);
-                                if(visited[ny][nx]==0 && l<=tmp && tmp<=r){
+                                if(visited[ny][nx]==now && l<=tmp && tmp<=r){
                                     q.offerLast(new int[] {ny, nx});
                                     opened.offer(q.peekLast());
-                                    visited[ny][nx] = cnt;
+                                    visited[ny][nx] = !now;
                                     sum+=arr[ny][nx];
                                 }
                             }
@@ -74,6 +71,7 @@ public class Main {
                     }
                 }
             }
+            now = !now;
         }
         System.out.println(answer);
     }
