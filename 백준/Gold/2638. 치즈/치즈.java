@@ -1,10 +1,7 @@
-import javax.swing.text.html.ListView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -14,11 +11,7 @@ public class Main {
         return 0<=y && y<n && 0<=x && x<m;
     }
 
-    public static void pArr(int[][] arr){
-        for (int i = 0; i < n; i++) {
-            System.out.println(Arrays.toString(arr[i]));
-        }
-    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -46,7 +39,6 @@ public class Main {
             while(!newq.isEmpty()) {
                 curr = newq.pollFirst();
                 q.offerLast(curr);
-                arr[curr[0]][curr[1]] = -1;
             }
             while (!q.isEmpty()) {
                 curr = q.pollFirst();
@@ -62,6 +54,7 @@ public class Main {
                             arr[ny][nx]++;
                             if (arr[ny][nx] == 3) {
                                 newq.offerLast(new int[]{ny, nx});
+                                arr[ny][nx] = -1;
                             }
                         }
                     }
