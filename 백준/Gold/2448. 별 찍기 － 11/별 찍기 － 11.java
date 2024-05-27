@@ -1,49 +1,45 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
 
-    static StringBuilder sb;
+    static int n;
+    static char[][] arr;
 
-
-    static void solve(int n, int i, int j) {
-        if(n==3){
-            switch (i){
-                case 0:
-                    if(j==2) sb.append('*');
-                    else sb.append(' ');
-                    break;
-                case 1:
-                    if(j==1||j==3) sb.append('*');
-                    else sb.append(' ');
-                    break;
-                case 2:
-                    if(j==5) sb.append(' ');
-                    else sb.append('*');
-                    break;
+    static void solve(int i, int j, int size){
+        if(size==3){
+            arr[i][j] = '*';
+            arr[i+1][j-1] = arr[i+1][j+1] = '*';
+            for (int k = 0; k < 5; k++) {
+                arr[i+2][j-2+k] = '*';
             }
             return;
         }
-        if(i < n/2){
-            if(j < n/2 || j >= n*3/2)
-                sb.append(' ');
-            else solve(n/2,i%(n/2), j-(n/2));
-        }  else{
-            solve(n/2, i%(n/2), j%(n));
-        }
+
+        solve(i, j, size/2);
+        solve(i+size/2, j-size/2, size/2);
+        solve(i+size/2, j+size/2, size/2);
     }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        sb = new StringBuilder();
-        int n = Integer.parseInt(br.readLine());
+        n = Integer.parseInt(br.readLine());
 
+        arr = new char[n][2*n-1];
+
+        solve(0, n-1, n);
+
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n*2; j++) {
-                solve(n, i, j);
+            for (int j = 0; j < 2*n-1; j++) {
+                if(arr[i][j]=='*') sb.append('*');
+                else sb.append(' ');
             }
             sb.append("\n");
         }
         System.out.println(sb);
+
     }
 }
