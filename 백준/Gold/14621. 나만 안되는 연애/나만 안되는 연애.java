@@ -42,7 +42,7 @@ public class Main {
             v = Integer.parseInt(st.nextToken());
             d = Integer.parseInt(st.nextToken());
 
-            if (uni[u] ^ uni[v]) {
+            if (uni[u] != uni[v]) {
                 pq.add(new int[]{u, v, d});
             }
         }
