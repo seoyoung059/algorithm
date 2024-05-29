@@ -100,7 +100,7 @@ public class Main {
                         }
                         break;
                     case 2:
-                        nd = (d / 2) * 2 + (1 - d % 2);
+                        nd = d + ((d % 2 == 0) ? +1 : -1);
 //                        System.out.println("change dir "+ d+" "+nd);
                         ny = y + dy[nd];
                         nx = x + dx[nd];
