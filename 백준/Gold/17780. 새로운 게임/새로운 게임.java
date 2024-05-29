@@ -7,50 +7,51 @@ import java.util.StringTokenizer;
 
 public class Main {
 
+
     static class Piece {
         int y;
         int x;
         int dir;
+        int top;
+        int cnt;
 
-        boolean isOn;
-
-        Piece (int y, int x, int dir){
+        Piece(int i, int y, int x, int dir) {
             this.y = y;
             this.x = x;
             this.dir = dir;
-            this.isOn = false;
+            this.top = i;
+            this.cnt = 1;
         }
 
         @Override
         public String toString() {
-            return (this.y+" "+this.x+" "+this.dir+" "+this.isOn);
+            return (""+ this.cnt);
         }
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        
+
         int n = Integer.parseInt(st.nextToken());
         int k = Integer.parseInt(st.nextToken());
-        
-        int[][] color = new int[n+2][n+2];
-        ArrayDeque<Piece>[][] board = new ArrayDeque[n+2][n+2];
+
+        int[][] color = new int[n + 2][n + 2];
+        Piece[][] board = new Piece[n + 2][n + 2];
         int[] dy = {0, 0, -1, 1};
         int[] dx = {1, -1, 0, 0};
 
-        for (int i = 0; i < n+2; i++) {
+        for (int i = 0; i < n + 2; i++) {
             color[0][i] = 2;
-            color[n+1][i] = 2;
+            color[n + 1][i] = 2;
             color[i][0] = 2;
-            color[i][n+1] = 2;
+            color[i][n + 1] = 2;
         }
 
-        for (int i = 1; i < n+1; i++) {
+        for (int i = 1; i < n + 1; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 1; j < n+1; j++) {
+            for (int j = 1; j < n + 1; j++) {
                 color[i][j] = Integer.parseInt(st.nextToken());
-                board[i][j] = new ArrayDeque<Piece>();
             }
         }
 
@@ -60,48 +61,57 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             y = Integer.parseInt(st.nextToken());
             x = Integer.parseInt(st.nextToken());
-            d = Integer.parseInt(st.nextToken())-1;
-            pieces[i] = new Piece(y, x, d);
-            board[y][x].offerLast(pieces[i]);
+            d = Integer.parseInt(st.nextToken()) - 1;
+            pieces[i] = new Piece(i, y, x, d);
+            board[y][x]=pieces[i];
         }
 
-        int ny, nx, nd;
+        int ny, nx, nd, top, cnt;
         Piece tmp;
         int answer = -1;
-        loop: for (int t = 1; t < 1001; t++)  {
+        loop:
+        for (int t = 1; t < 1001; t++) {
             for (int i = 0; i < k; i++) {
-                if (pieces[i].isOn) continue;
-
+                if (pieces[i].cnt==0) continue;
                 y = pieces[i].y;
                 x = pieces[i].x;
                 d = pieces[i].dir;
+                top = pieces[i].top;
+                cnt = pieces[i].cnt;
 
                 ny = y + dy[d];
                 nx = x + dx[d];
 
-//                System.out.println(i+" "+color[ny][nx]);
                 switch (color[ny][nx]) {
                     case 0:
-                        while (!board[y][x].isEmpty()) {
-                            tmp = board[y][x].pollFirst();
-                            tmp.y = ny;
-                            tmp.x = nx;
-                            tmp.isOn = !board[ny][nx].isEmpty();
-                            board[ny][nx].offerLast(tmp);
+                        if(board[ny][nx] == null){
+                            board[ny][nx] = pieces[i];
+                            pieces[i].y = ny;
+                            pieces[i].x = nx;
+                        } else {
+                            pieces[i].cnt = 0;
+                            board[ny][nx].top = top;
+                            board[ny][nx].cnt += cnt;
                         }
+                        board[y][x] = null;
                         break;
                     case 1:
-                        while (!board[y][x].isEmpty()) {
-                            tmp = board[y][x].pollLast();
-                            tmp.y = ny;
-                            tmp.x = nx;
-                            tmp.isOn = !board[ny][nx].isEmpty();
-                            board[ny][nx].offerLast(tmp);
+                        if(board[ny][nx] == null){
+                            board[ny][nx] = pieces[top];
+                            pieces[i].cnt = 0;
+                            pieces[top].y = ny;
+                            pieces[top].x = nx;
+                            pieces[top].cnt = cnt;
+                            pieces[top].top = i;
+                        } else {
+                            pieces[i].cnt = 0;
+                            board[ny][nx].top = i;
+                            board[ny][nx].cnt += cnt;
                         }
+                        board[y][x] = null;
                         break;
                     case 2:
                         nd = d + ((d % 2 == 0) ? +1 : -1);
-//                        System.out.println("change dir "+ d+" "+nd);
                         ny = y + dy[nd];
                         nx = x + dx[nd];
                         if (color[ny][nx] == 2) {
@@ -112,14 +122,15 @@ public class Main {
                         }
                         break;
                 }
-                if(board[ny][nx]!=null&&board[ny][nx].size()>=4){
+                if (board[ny][nx] != null && board[ny][nx].cnt >= 4) {
                     answer = t;
                     break loop;
                 }
+
+
             }
-//            System.out.println(Arrays.toString(pieces));
+
         }
-//        System.out.println(Arrays.toString(pieces));
         System.out.println(answer);
     }
 }
