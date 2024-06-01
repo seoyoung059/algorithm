@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
@@ -14,44 +12,42 @@ public class Main {
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
 
-        PriorityQueue<Integer> positive = new PriorityQueue<>(Comparator.reverseOrder());
-        PriorityQueue<Integer> negative = new PriorityQueue<>();
-        
+//        PriorityQueue<Integer> positive = new PriorityQueue<>(Comparator.reverseOrder());
+//        PriorityQueue<Integer> negative = new PriorityQueue<>();
+
+        ArrayList<Integer> positive = new ArrayList<>();
+        ArrayList<Integer> negative = new ArrayList<>();
+
         st = new StringTokenizer(br.readLine());
         int tmp;
         for (int i = 0; i < n; i++) {
             tmp = Integer.parseInt(st.nextToken());
-            if(tmp > 0) positive.offer(tmp);
-            else negative.offer(tmp);
+            if(tmp > 0) positive.add(tmp);
+            else negative.add(tmp);
         }
+
+        positive.sort(Comparator.reverseOrder());
+        negative.sort(Comparator.naturalOrder());
 
         int answer = 0;
         int max = -1;
         // neg, 먼것부터
         int cnt = 0;
-        while(!negative.isEmpty()){
-            tmp = negative.poll();
-            if(cnt==0){
-                answer += Math.abs(tmp);
-                max = Math.max(max, -tmp);
+        for(Integer num: negative){
+            if(cnt%m==0){
+                answer -= num;
+                max = Math.max(max, -num);
             }
             cnt++;
-            if(cnt==m){
-                cnt = 0;
-            }
         }
 
         cnt = 0;
-        while(!positive.isEmpty()){
-            tmp = positive.poll();
-            if(cnt==0){
-                answer += Math.abs(tmp);
-                max = Math.max(max, tmp);
+        for(Integer num: positive){
+            if(cnt%m==0){
+                answer += num;
+                max = Math.max(max, num);
             }
             cnt++;
-            if(cnt==m){
-                cnt = 0;
-            }
         }
         System.out.println(answer*2-max);
     }
