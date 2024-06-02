@@ -47,8 +47,8 @@ public class Main {
         int tmp;
         a = n+1; b = n+1;
         for (int i = 1; i < n+1; i++) {
-            tmp = 0;
             for (int j = i+1; j < n+1; j++) {
+                tmp = 0;
                 for (int k = 1; k < n+1; k++) {
                     tmp+=Math.min(distance[k][i], distance[k][j]);
                 }
