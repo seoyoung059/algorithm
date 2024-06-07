@@ -44,33 +44,19 @@ public class Main {
             arr[i] = new Order(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
         }
 
-
-        int[][][] dp = new int[m+1][k+1][n+1];
+        int[][] dp = new int[m+1][k+1];
         int answer = 0;
         int x, y;
         for (int i = 1; i < n+1; i++) {
-//            System.out.println(arr[i]);
             x = arr[i].x;
             y = arr[i].y;
-            for (int j = m; j >= 0 ; j--) {
-                if(j - x < 0) continue;
-                for (int l = k; l >= 0 ; l--) {
-                    if(l - y < 0) break;
-                    for (int o = 0; o < i; o++) {
-                        dp[j][l][i] = Math.max(dp[j-x][l-y][o]+1, dp[j][l][i]);
-                        answer = Math.max(answer,dp[j][l][i]);
-                    }
+            for (int j = m; j >= x; j--) {
+                for (int l = k; l >= y; l--) {
+                    dp[j][l] = Math.max(dp[j - x][l - y] + 1, dp[j][l]);
+                    answer = Math.max(answer, dp[j][l]);
                 }
             }
-
-//            for (int j = 0; j < m+1; j++) {
-//                for (int l = 0; l < k+1; l++) {
-//                    System.out.print(dp[j][l][i]+" ");
-//                }
-//                System.out.println();
-//            }
         }
-
 
         System.out.println(answer);
 
