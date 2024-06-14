@@ -18,7 +18,7 @@ public class Main {
 
         h = Integer.parseInt(st.nextToken());
         w = Integer.parseInt(st.nextToken());
-        int[][][] arr = new int[2][h][w];
+        int[][] arr = new int[h][w];
         boolean[][] visited = new boolean[h][w];
 
         int[] dy = new int[] {-1, -1, -1, 0, 0, 1, 1, 1};
@@ -32,24 +32,11 @@ public class Main {
             for (int j = 0; j < w; j++) {
                 switch(str.charAt(j)) {
                     case '.':
-                        arr[0][i][j] = 0;
-                        for (int k = 0; k < 8; k++) {
-                            ny = i+dy[k]; nx = j+dx[k];
-                            if (isValid(ny, nx)) {
-                                arr[1][ny][nx]++;
-                                if(arr[0][ny][nx] <= arr[1][ny][nx] && visited[ny][nx]){
-                                    q.offer(new int[] {ny, nx});
-                                    visited[ny][nx] = false;
-                                }
-                            }
-                        }
+                        arr[i][j] = 0;
+                        q.offerLast(new int[] {i, j});
                         break;
                     default:
-                        arr[0][i][j] = str.charAt(j)-'0';
-                        if(arr[0][i][j] <= arr[1][i][j]){
-                            q.offer(new int[] {i, j});
-                            visited[i][j] = false;
-                        }
+                        arr[i][j] += str.charAt(j)-'0';
                         visited[i][j] = true;
                         break;
                 }
@@ -65,11 +52,10 @@ public class Main {
                 curr = q.pollFirst();
                 for (int k = 0; k < 8; k++) {
                     ny = curr[0]+dy[k]; nx = curr[1]+dx[k];
-                    if (isValid(ny, nx) && arr[0][ny][nx] > 0) {
-                        arr[1][ny][nx]++;
-                        if(arr[0][ny][nx] <= arr[1][ny][nx] && visited[ny][nx]){
+                    if (isValid(ny, nx) && arr[ny][nx] > 0) {
+                        arr[ny][nx]--;
+                        if(arr[ny][nx] <= 0 && visited[ny][nx]){
                             q.offerLast(new int[] {ny, nx});
-                            arr[0][curr[0]][curr[1]] = 0;
                             visited[ny][nx] = false;
                         }
                     }
@@ -77,6 +63,6 @@ public class Main {
             }
         }
 
-        System.out.println(answer);
+        System.out.println(answer-1);
     }
 }
