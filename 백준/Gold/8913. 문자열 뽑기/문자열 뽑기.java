@@ -20,13 +20,13 @@ public class Main {
                 if(hm.get(str)!=null) return hm.get(str);
                 cnt = 1;
                 for (int i = 1; i < str.length(); i++) {
-                    if(str.charAt(i-1)== str.charAt(i)){
+                    if(str.charAt(i-1) == str.charAt(i)){
                         cnt++;
                     } else {
                         if(cnt>=2){
-                            nextStr = str.substring(0, i-cnt).concat(str.substring(i, str.length()));
+                            nextStr = str.substring(0, i-cnt).concat(str.substring(i));
                             hm.put(nextStr, solve(nextStr));
-                            answer |= hm.get(nextStr);
+                            if(hm.get(nextStr)) return true;
                         }
                         cnt = 1;
                     }
@@ -34,10 +34,10 @@ public class Main {
                 if(cnt>=2) {
                     nextStr = str.substring(0, str.length()-cnt);
                     hm.put(nextStr, solve(nextStr));
-                    answer|=hm.get(nextStr);
+                    if(hm.get(nextStr)) return true;
                 }
         }
-        return answer;
+        return false;
     }
 
     public static void main(String[] args) throws IOException {
