@@ -18,19 +18,21 @@ public class Main {
 
 
         HashMap<String, Integer> hm = new HashMap<>();
-        String sub, str; int ans1=Integer.MAX_VALUE, ans2=Integer.MAX_VALUE, length = -1;
+        String sub, str; int ans1=Integer.MAX_VALUE, ans2=Integer.MAX_VALUE, length = -1, l; Integer tmp;
         for (int i = 0; i < n; i++) {
             str = arr[i];
             for (int j = 0; j < str.length()+1; j++) {
                 sub = str.substring(0, j);
-                if(hm.get(sub)!=null) {
-                    if((length < sub.length() || (length==sub.length() && ans1 > hm.get(sub))) && !arr[i].equals(arr[hm.get(sub)])) {
-                        ans1 = hm.get(sub);
+                tmp = hm.get(sub);
+                l = sub.length();
+                if(tmp!=null) {
+                    if((length < l || (length==l && ans1 > tmp)) && !arr[i].equals(arr[tmp])) {
+                        ans1 = tmp;
                         ans2 = i;
-                        length = sub.length();
+                        length = l;
                     }
                 } else {
-                    hm.put(str.substring(0, j), i);
+                    hm.put(sub, i);
                 }
             }
         }
