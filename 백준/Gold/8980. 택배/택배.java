@@ -19,7 +19,7 @@ public class Main {
 
         @Override
         public int compareTo(Boxes o) {
-            if(this.e==o.e) return this.s - o.s;
+            if(this.e==o.e) return o.s - this.s;
             return this.e - o.e;
         }
     }
@@ -38,6 +38,11 @@ public class Main {
         }
 
         Arrays.sort(arr);
+//        for (int i = 0; i < m; i++) {
+//            Boxes order = arr[i];
+//            System.out.println(order.s+" to "+order.e+": "+ order.num);
+//
+//        }
 
 
         int answer = 0, curr = 0, tmp, idx = 1;
@@ -45,15 +50,15 @@ public class Main {
         Boxes order;
         for (int i = 0; i < m; i++) {
             order = arr[i];
-            while(idx <= order.s){
-                curr -= truck[idx];
-                truck[idx++] = 0;
+            tmp = order.num;
+            for (int j = order.s; j < order.e; j++) {
+                tmp = Math.min(c-truck[j], tmp);
             }
-            tmp = Math.min(order.num, c-curr);
+            answer+= tmp;
 
-            answer += tmp;
-            truck[order.e] += tmp;
-            curr += tmp;
+            for (int j = order.s; j < order.e; j++) {
+                truck[j]+=tmp;
+            }
         }
         System.out.println(answer);
     }
