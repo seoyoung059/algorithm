@@ -49,6 +49,7 @@ public class Main {
             a = Integer.parseInt(st.nextToken());
             b = Integer.parseInt(st.nextToken());
             t = Integer.parseInt(st.nextToken());
+            if(sight[a] || sight[b]) continue;
             arr[a].offer(new Node(b, t));
             arr[b].offer(new Node(a, t));
         }
