@@ -68,7 +68,7 @@ public class Main {
             }
             if(distance[curr.idx] < curr.t) continue;
             for (Node node : arr[curr.idx]) {
-                if (!sight[node.idx] && distance[node.idx] > distance[curr.idx] + node.t) {
+                if (distance[node.idx] > distance[curr.idx] + node.t) {
                     distance[node.idx] = distance[curr.idx] + node.t;
                     pq.offer(new Node(node.idx, distance[curr.idx] + node.t));
                 }
