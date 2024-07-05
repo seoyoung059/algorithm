@@ -1,5 +1,5 @@
 import sys
-sys.setrecursionlimit(10**4)
+sys.setrecursionlimit(10**6)
 
 n = int(sys.stdin.readline())
 a = sys.stdin.readline().rstrip()
