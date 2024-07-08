@@ -1,8 +1,5 @@
 class Solution {
     
-    static boolean isValid(int y, int x) {
-        return 0<=y && y<3 && 0<x && x<3;
-    }
     
     public int solution(String[] board) {
         int answer = 1;
@@ -41,14 +38,14 @@ class Solution {
                 if(board[0].charAt(i)==board[1].charAt(i) && board[0].charAt(i)==board[2].charAt(i)){
                     if(board[0].charAt(i)=='O'){
                         cntO++;
-                        check[0][i]++;
-                        check[1][i]++;
-                        check[2][i]++;
+                        for(int j=0; j<3; j++){
+                            check[j][i]++;
+                        }
                     } else {
                         cntX++;
-                        check[0][i]--;
-                        check[1][i]--;
-                        check[2][i]--;
+                        for(int j=0; j<3; j++){
+                            check[j][i]--;
+                        }
                     }
                 }             
             }
@@ -61,14 +58,14 @@ class Solution {
                 if(board[0].charAt(0)==board[1].charAt(1) && board[1].charAt(1)==board[2].charAt(2)){
                     if(board[1].charAt(1)=='O'){
                         cntO++;
-                        check[0][0]++;
-                        check[1][1]++;
-                        check[2][2]++;
+                        for(int i=0; i<3; i++){
+                            check[i][i]++;
+                        }
                     } else {
                         cntX++;
-                        check[0][0]--;
-                        check[1][1]--;
-                        check[2][2]--;
+                        for(int i=0; i<3; i++){
+                            check[i][i]--;
+                        }
                     }
                 }
                 
@@ -76,14 +73,14 @@ class Solution {
                 if(board[2].charAt(0)==board[1].charAt(1) && board[1].charAt(1)==board[0].charAt(2)){
                     if(board[1].charAt(1)=='O'){
                         cntO++;
-                        check[2][0]++;
-                        check[1][1]++;
-                        check[0][2]++;
+                        for(int i=0; i<3; i++){
+                            check[2-i][i]++;
+                        }
                     } else {
                         cntX++;
-                        check[2][0]--;
-                        check[1][1]--;
-                        check[0][2]--;
+                        for(int i=0; i<3; i++){
+                            check[2-i][i]--;
+                        }
                     }
                 }
             }
@@ -91,13 +88,13 @@ class Solution {
         System.out.println(cntO+" "+cntX+" "+cnt);
         if(cnt<0|| cnt>1 || (cntO>0 && cnt!=1) || (cntX>0 && cnt!=0) ||(cntO>0&&cntX>0)) return 0;
         
-        cnt=0;
-        for(int i=0; i<3; i++){
-            for(int j=0; j<3; j++) {
-                if(check[i][j]>1 || check[i][j]<-1) cnt++;
-                if(cnt > 1) return 0;
-            }
-        }
+        // cnt=0;
+        // for(int i=0; i<3; i++){
+        //     for(int j=0; j<3; j++) {
+        //         if(check[i][j]>1 || check[i][j]<-1) cnt++;
+        //         if(cnt > 1) return 0;
+        //     }
+        // }
         
         return answer;
     }
