@@ -6,11 +6,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int w, h;
 
-    static boolean isValid(int y, int x){
-        return 0<=y && y<h && 0<=x && x<w;
-    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int k = Integer.parseInt(br.readLine());
@@ -21,8 +17,8 @@ public class Main {
         int[] dx = {-1, +1, 0, 0};
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        w  = Integer.parseInt(st.nextToken());
-        h = Integer.parseInt(st.nextToken());
+        int w = Integer.parseInt(st.nextToken());
+        int h = Integer.parseInt(st.nextToken());
 
         int[][] board = new int[h][w];
 
@@ -34,32 +30,36 @@ public class Main {
         }
 
         ArrayDeque<int[]> q = new ArrayDeque<>();
-        q.offer(new int[] {0, 0, 0});
-        int qSize, ny, nx; int[] curr;
+        q.offer(new int[]{0, 0, 0});
+        int qSize, ny, nx;
+        int[] curr;
         int cnt = 0, answer = -1;
-        loop: while(!q.isEmpty()){
+        loop:
+        while (!q.isEmpty()) {
             qSize = q.size();
-            while(qSize-- > 0){
+            while (qSize-- > 0) {
                 curr = q.pollFirst();
-                if(curr[0]==h-1 && curr[1]==w-1) {
+                if (curr[0] == h - 1 && curr[1] == w - 1) {
                     answer = cnt;
                     break loop;
                 }
                 for (int i = 0; i < 4; i++) {
                     ny = curr[0] + dy[i];
                     nx = curr[1] + dx[i];
-                    if(!isValid(ny, nx) || board[ny][nx]==-1 || (board[ny][nx]&(1<<curr[2]))>0 ) continue;
-                    board[ny][nx]|=(1<<curr[2]);
-                    q.offerLast(new int[] {ny, nx, curr[2]});
+                    if (ny < 0 || h <= ny || nx < 0 || w <= nx) continue;
+                    if (board[ny][nx] == -1 || (board[ny][nx] & (1 << curr[2])) > 0) continue;
+                    board[ny][nx] |= (1 << curr[2]);
+                    q.offerLast(new int[]{ny, nx, curr[2]});
                 }
 
-                if(curr[2] == k) continue;
+                if (curr[2] == k) continue;
                 for (int i = 0; i < 8; i++) {
                     ny = curr[0] + hy[i];
                     nx = curr[1] + hx[i];
-                    if(!isValid(ny, nx) || board[ny][nx]==-1 || (board[ny][nx]&(1<<(curr[2]+1)))>0 ) continue;
-                    board[ny][nx]|=(1<<(curr[2]+1));
-                    q.offerLast(new int[] {ny, nx, curr[2]+1});
+                    if (ny < 0 || h <= ny || nx < 0 || w <= nx) continue;
+                    if (board[ny][nx] == -1 || (board[ny][nx] & (1 << (curr[2] + 1))) > 0) continue;
+                    board[ny][nx] |= (1 << (curr[2] + 1));
+                    q.offerLast(new int[]{ny, nx, curr[2] + 1});
                 }
             }
             cnt++;
