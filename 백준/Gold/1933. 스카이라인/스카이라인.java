@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
@@ -19,17 +18,8 @@ public class Main {
         }
 
         @Override
-        public String toString() {
-            return "Node{" +
-                    "l=" + l +
-                    ", h=" + h +
-                    ", r=" + r +
-                    '}';
-        }
-
-        @Override
         public int compareTo(Node o) {
-            if(this.h==o.h) return this.l-o.l;
+            if (this.h == o.h) return this.l - o.l;
             return o.h - this.h;
         }
     }
@@ -38,7 +28,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
 
-        Node[] arr = new Node[n+1];
+        Node[] arr = new Node[n];
         StringTokenizer st;
         int l, h, r;
         for (int i = 0; i < n; i++) {
@@ -48,11 +38,10 @@ public class Main {
             r = Integer.parseInt(st.nextToken());
             arr[i] = new Node(l, h, r);
         }
-        arr[n] = new Node(1_000_000_001, 1, 1_000_000_002);
 
-        Arrays.sort(arr, (o1, o2)->{
-            if(o1.l==o2.l) return o2.h-o1.h;
-            return o1.l-o2.l;
+        Arrays.sort(arr, (o1, o2) -> {
+            if (o1.l == o2.l) return o2.h - o1.h;
+            return o1.l - o2.l;
         });
         PriorityQueue<Node> pq = new PriorityQueue<>();
 
@@ -60,44 +49,25 @@ public class Main {
         StringBuilder sb = new StringBuilder();
 
         int idx = 0, currH = 0, currX = 0;
-        while(idx < n || pq.size() > 1) {
-            if (idx < n) {
-                while (pq.peek().r < arr[idx].l) {
-                    currX = pq.poll().r;
-                    while(!pq.isEmpty() && pq.peek().r <= currX){
-                        pq.poll();
-                    }
-                    if(currH > pq.peek().h) {
-                        sb.append(currX).append(' ');
-                        sb.append(pq.peek().h).append(' ');
-                        currH = pq.peek().h;
-                    }
+        while (idx < n || pq.size() > 1) {
+            while ((idx < n && pq.peek().r < arr[idx].l) || (idx==n &&pq.size() > 1)) {
+                currX = pq.poll().r;
+                while (!pq.isEmpty() && pq.peek().r <= currX) {
+                    pq.poll();
                 }
-
+                if (currH > pq.peek().h) {
+                    sb.append(currX).append(' ').append(pq.peek().h).append(' ');
+                    currH = pq.peek().h;
+                }
+            }
+            if (idx < n) {
                 pq.offer(arr[idx++]);
-                if(pq.peek().h > currH) {
-                    sb.append(pq.peek().l).append(' ');
-                    sb.append(pq.peek().h).append(' ');
+                if (pq.peek().h > currH) {
+                    sb.append(pq.peek().l).append(' ').append(pq.peek().h).append(' ');
                     currH = pq.peek().h;
                 }
             }
 
-            else {
-//                System.out.println("hihi");
-                while (pq.size() > 1) {
-//                    System.out.println(pq.toString());
-                    currX = pq.poll().r;
-                    while(!pq.isEmpty() && pq.peek().r <= currX){
-                        pq.poll();
-                    }
-                    if(currH > pq.peek().h) {
-                        sb.append(currX).append(' ');
-                        sb.append(pq.peek().h).append(' ');
-                        currH = pq.peek().h;
-                    }
-                }
-            }
-//            System.out.println(sb.toString());
         }
 
 
