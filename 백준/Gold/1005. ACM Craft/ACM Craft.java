@@ -47,6 +47,7 @@ public class Main {
                 cnt[next]--;
                 time[next] = Math.max(time[next], time[curr]);
                 if(cnt[next]==0) {
+                    if(next==w) return time[next]+arr[next];
                     q.offerLast(next);
                 }
             }
