@@ -1,0 +1,12 @@
+-- 코드를 작성해주세요
+SELECT  ID,
+        CASE 
+            WHEN TEMP.CLASS=1 THEN 'CRITICAL'
+            WHEN TEMP.CLASS=2 THEN 'HIGH'
+            WHEN TEMP.CLASS=3 THEN 'MEDIUM'
+            WHEN TEMP.CLASS=4 THEN 'LOW'
+        END AS COLONY_NAME
+    FROM   (SELECT  *,
+                    NTILE(4) OVER (ORDER BY SIZE_OF_COLONY DESC) AS CLASS
+                    FROM ECOLI_DATA) AS TEMP
+    ORDER BY ID ASC
